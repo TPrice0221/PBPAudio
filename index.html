@@ -102,6 +102,19 @@
   <audio id="bgMusic" loop>
     <source src="yourbeat.mp3" type="audio/mpeg">
   </audio>
+  <script>
+function openVibe() {
+  document.getElementById("vibeContainer").style.display = "block";
+}
+
+function closeVibe() {
+  document.getElementById("vibeContainer").style.display = "none";
+
+  // reload iframe to stop music
+  let frame = document.getElementById("vibeFrame");
+  frame.src = frame.src;
+}
+</script>
 
   <script>
     const overlay = document.getElementById("overlay");
