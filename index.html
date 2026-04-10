@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PBP Audio Experience</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Enter The Vibe</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
-#vibeLauncher {
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: white;
   text-align: center;
-  margin: 40px 0;
 }
 
-#vibeLauncher button {
-  padding: 18px 40px;
-  font-size: 18px;
+/* ENTER BUTTON */
+#launcher {
+  margin-top: 100px;
+}
+
+#launcher button {
+  padding: 20px 50px;
+  font-size: 20px;
   background: black;
   color: white;
   border: 2px solid white;
   cursor: pointer;
 }
 
-#vibeContainer {
+/* FULLSCREEN ROOM */
+#room {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -35,107 +39,109 @@
   z-index: 999;
 }
 
-#vibeFrame {
+/* GAME FRAME */
+#gameFrame {
   width: 100%;
   height: 100%;
+  border: none;
 }
 
-#closeBtn {
+/* CONTROLS */
+#controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  text-align: left;
+}
+
+#controls button {
+  margin: 5px;
+  padding: 10px 15px;
+}
+
+#info {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* EXIT */
+#exitBtn {
   position: absolute;
   top: 20px;
   right: 20px;
   padding: 10px 15px;
-  z-index: 1000;
 }
-    /* Overlay screen */
-    #overlay {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, #111, #000);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 24px;
-      letter-spacing: 2px;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    #overlay span {
-      opacity: 0.8;
-      transition: 0.3s;
-    }
-
-    #overlay:hover span {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-
-    /* Optional subtle background pulse */
-    .pulse {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent);
-      animation: pulse 2s infinite;
-      z-index: 1;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.2; }
-      50% { opacity: 0.5; }
-      100% { opacity: 0.2; }
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-  <div id="overlay">
-    <span>ENTER THE VIBE</span>
+<!-- ENTER SCREEN -->
+<div id="launcher">
+  <button onclick="enterRoom()">ENTER THE VIBE</button>
+</div>
+
+<!-- ROOM -->
+<div id="room">
+
+  <iframe 
+    id="gameFrame"
+    src="https://TPrice0221.github.io/PBPAudio/"
+    allow="autoplay">
+  </iframe>
+
+  <button id="exitBtn" onclick="exitRoom()">EXIT</button>
+
+  <div id="controls">
+    <button onclick="toggleAudio()">Play / Pause</button>
+    <button onclick="restartAudio()">Restart</button>
+
+    <div id="info">
+      Beat: "XoXo"<br>
+      Producer: CannaprizeBEATS
+    </div>
   </div>
 
-  <div class="pulse"></div>
+</div>
 
-  <audio id="bgMusic" loop>
-    <source src="yourbeat.mp3" type="audio/mpeg">
-  </audio>
-  <script>
-function openVibe() {
-  document.getElementById("vibeContainer").style.display = "block";
+<!-- AUDIO (THIS is the important part) -->
+<audio id="roomAudio" src="beat.mp3"></audio>
+
+<script>
+let audio = document.getElementById("roomAudio");
+
+function enterRoom() {
+  document.getElementById("room").style.display = "block";
+
+  audio.currentTime = 0;
+  audio.play();
 }
 
-function closeVibe() {
-  document.getElementById("vibeContainer").style.display = "none";
+function exitRoom() {
+  document.getElementById("room").style.display = "none";
 
-  // reload iframe to stop music
-  let frame = document.getElementById("vibeFrame");
+  audio.pause();
+  audio.currentTime = 0;
+
+  // reset iframe (stops game)
+  let frame = document.getElementById("gameFrame");
   frame.src = frame.src;
 }
-</script>
 
-  <script>
-    const overlay = document.getElementById("overlay");
-    const audio = document.getElementById("bgMusic");
-
-    overlay.addEventListener("click", () => {
-      audio.volume = 0;
-audio.play();
-
-let vol = 0;
-let fade = setInterval(() => {
-  if (vol < 0.8) {
-    vol += 0.05;
-    audio.volume = vol;
+function toggleAudio() {
+  if (audio.paused) {
+    audio.play();
   } else {
-    clearInterval(fade);
+    audio.pause();
   }
-}, 200);
-      overlay.style.display = "none";
-    });
-  </script>
+}
+
+function restartAudio() {
+  audio.currentTime = 0;
+  audio.play();
+}
+</script>
 
 </body>
 </html>
